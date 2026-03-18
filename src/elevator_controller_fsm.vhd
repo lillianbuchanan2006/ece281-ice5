@@ -93,16 +93,61 @@ architecture Behavioral of elevator_controller_fsm is
 begin
 
 	-- CONCURRENT STATEMENTS ------------------------------------------------------------------------------
-	
-	-- Next State Logic
-  
+
+--- def wrong ///    
+    -- Next State Logic
+    f_Q_next <= '1' when (i_up_down : '1') else -- going up
+            ...
+            '0' when (i_up_down: '0');
+
+   -- Next State Logic
+   f_Q_next <= '1' when i_up_down <= 1 else -- going up
+            i_up_down <= 0; 
+            0_floor <= 3; 
+            
+            ... -- going down
+            ...
+            ... else
+            ...; -- default case
+--- def wrong ^^^
+
+
 	-- Output logic
+	-- Output logic
+    with f_Q select
+        o_floor <= "0001" when s_floor1,
+            "0010" when s_floor2,
+            "0011" when s_floor3,
+            "0100" when s_floor4, 
+            "0001" when others; -- default is floor1
 
 	-------------------------------------------------------------------------------------------------------
 	
 	-- PROCESSES ------------------------------------------------------------------------------------------	
 	
 	-- State register ------------
+	
+	
+	--- next state logic 
+   f_Q_next <= '1' when i_up_down <= 1 else -- going up
+            i_up_down <= 0; 
+            0_floor <= 3; 
+            
+            ... -- going down
+            ...
+            ... else
+            ...; -- default case
+
+	
+	
+	---  output logic 
+	-- Output logic
+    with f_Q select
+        o_floor <= "0001" when s_floor1,
+            "0010" when s_floor2,
+            "0011" when s_floor3,
+            "0100" when s_floor4, 
+            "0001" when others; -- default is floor1
 	
 	
 	-------------------------------------------------------------------------------------------------------
