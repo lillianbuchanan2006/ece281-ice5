@@ -94,22 +94,8 @@ begin
 
 	-- CONCURRENT STATEMENTS ------------------------------------------------------------------------------
 
---- def wrong ///    
-    -- Next State Logic
-    f_Q_next <= '1' when (i_up_down : '1') else -- going up
-            ...
-            '0' when (i_up_down: '0');
 
-   -- Next State Logic
-   f_Q_next <= '1' when i_up_down <= 1 else -- going up
-            i_up_down <= 0; 
-            0_floor <= 3; 
-            
-            ... -- going down
-            ...
-            ... else
-            ...; -- default case
---- def wrong ^^^
+
 
 
 	-- Output logic
@@ -126,18 +112,26 @@ begin
 	-- PROCESSES ------------------------------------------------------------------------------------------	
 	
 	-- State register ------------
-	
-	
-	--- next state logic 
-   f_Q_next <= '1' when i_up_down <= 1 else -- going up
-            i_up_down <= 0; 
-            0_floor <= 3; 
-            
-            ... -- going down
-            ...
-            ... else
-            ...; -- default case
 
+    register_proc : process(i_clk)
+    begin
+     if rising_edge(i_clk) then
+            if i_reset = '1' then
+                f_Q <= s_floor2;
+            elsif i_stop = '0' then
+              f_Q <= f_Q_next;
+            end if;
+     end if;
+    end process;
+	
+-- Next State Logic
+    f_Q_next <= s_floor2 when f_Q = s_floor1 and i_up_down = '1' else -- going up
+             s_floor3 when f_Q = s_floor2 and i_up_down = '1' else
+             s_floor4 when f_Q = s_floor3 and i_up_down = '1' else
+            s_floor3 when f_Q = s_floor4 and i_up_down = '0' else -- going down
+            s_floor2 when f_Q = s_floor3 and i_up_down = '0' else
+            s_floor1 when f_Q = s_floor2 and i_up_down = '0' else
+            f_Q; -- default case
 	
 	
 	---  output logic 
@@ -147,13 +141,12 @@ begin
             "0010" when s_floor2,
             "0011" when s_floor3,
             "0100" when s_floor4, 
-            "0001" when others; -- default is floor1
+            "0010" when others; -- default is floor1
 	
 	
 	-------------------------------------------------------------------------------------------------------
 	
 	
-
 
 
 end Behavioral;

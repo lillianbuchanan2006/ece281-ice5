@@ -96,13 +96,14 @@ begin
 	end process clk_process;
 	
 	
-	-- Test Plan Process --------------------------------
+	--- Test Plan Process --------------------------------
 	test_process : process 
 	begin
         -- i_reset into initial state (o_floor 2)
         w_reset <= '1';  wait for k_clk_period;
             assert w_floor = x"2" report "bad reset" severity failure; 
         -- clear reset
+		w_reset <= '0';
 		
 		-- active UP signal
 		w_up_down <= '1'; 
@@ -134,12 +135,12 @@ begin
         
         -- go all the way down DOWN (how many clock cycles should that take?)
         w_up_down <= '0'; wait for k_clk_period*3; 
-            assert w_floor = x"" report "bad all the way down" severity failure; 
+            assert w_floor = x"1" report "bad all the way down" severity failure; 
         
   
 		  	
 		wait; -- wait forever
-	end process;	
-	-----------------------------------------------------	
+		
+	end process;----------------------------------------------------	
 	
 end test_bench;
